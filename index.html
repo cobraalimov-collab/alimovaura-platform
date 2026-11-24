@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>alimovaura — Web3 digital products</title>
+<meta name="description" content="alimovaura: digital products for your phone, trading and crypto. Pay once with USDT or USDC.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --white:#FFFFFF;
+    --gold:#D4AF37;          /* brand gold: large type, buttons */
+    --gold-2:#C5A059;        /* secondary gold: borders, gradients */
+    --gold-deep:#8A6D0B;     /* darker gold for SMALL text (readable on white) */
+    --gold-soft:#FBF5DC;
+    --line:#EFE6C4;
+    --ink:#2B2616; --muted:#6B6451;
+    --ok:#2E7D32; --err:#B3261E;
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--white);color:var(--ink);font:16px/1.65 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;color:var(--gold);line-height:1.15;margin:0 0 .5em;font-weight:700}
+  h1{font-size:clamp(2.2rem,5.5vw,3.8rem)} h2{font-size:clamp(1.7rem,4vw,2.4rem)} h3{font-size:1.4rem}
+  a{color:var(--gold-deep)}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+  section{padding:52px 0}
+  .kicker{letter-spacing:.16em;text-transform:uppercase;font-size:.74rem;color:var(--gold-deep);font-weight:600}
+  [hidden]{display:none!important}
+
+  header{position:sticky;top:0;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:10}
+  .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;height:64px}
+  .brand{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.75rem;font-weight:700;color:var(--gold);text-decoration:none;letter-spacing:.02em;text-transform:none}
+  nav{display:flex;gap:20px;align-items:center}
+  nav a{text-decoration:none;font-size:.92rem;color:var(--muted)} nav a:hover{color:var(--gold-deep)}
+  .lang{display:flex;border:1px solid var(--gold);border-radius:999px;overflow:hidden}
+  .lang button{border:0;background:#fff;color:var(--gold-deep);padding:6px 12px;font:600 .8rem Inter,sans-serif;cursor:pointer}
+  .lang button[aria-pressed="true"]{background:var(--gold);color:var(--ink)}
+  @media (max-width:700px){nav a{display:none}}
+
+  .hero{padding:68px 0 24px;text-align:center}
+  .hero p{max-width:640px;margin:0 auto 28px;color:var(--muted);font-size:1.1rem}
+
+  .btn{display:inline-block;border:0;border-radius:999px;padding:13px 26px;font:600 1rem Inter,sans-serif;cursor:pointer;text-decoration:none;
+       background:linear-gradient(135deg,#E6C75A,var(--gold) 55%,var(--gold-2));color:var(--ink);box-shadow:0 6px 18px rgba(212,175,55,.32);transition:transform .15s,box-shadow .15s}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(212,175,55,.42)}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+  .btn.ghost{background:#fff;border:1.5px solid var(--gold);box-shadow:none;color:var(--gold-deep)}
+  .btn.small{padding:8px 16px;font-size:.88rem}
+  .btn.block{width:100%;text-align:center}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+  .filters{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0 26px}
+  .chip{border:1.5px solid var(--line);background:#fff;color:var(--gold-deep);border-radius:999px;padding:7px 18px;font:600 .88rem Inter,sans-serif;cursor:pointer}
+  .chip[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:22px;align-items:stretch}
+  .pcard{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--radius);padding:24px;background:#fff;box-shadow:0 10px 36px rgba(212,175,55,.08)}
+  .pcard h3{margin:.2em 0 .1em;font-size:1.65rem}
+  .pcard .tag{margin:0 0 12px;color:var(--muted);font-size:.95rem}
+  .price{font-family:"Cormorant Garamond",Georgia,serif;font-size:2.3rem;font-weight:700;color:var(--gold);line-height:1}
+  .price small{font:500 .78rem Inter,sans-serif;color:var(--muted);margin-left:8px}
+  .blk{background:var(--gold-soft);border-radius:12px;padding:14px 16px;margin-top:12px}
+  .blk h4{margin:0 0 4px;font:700 .8rem Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-deep)}
+  .blk p,.blk li{margin:.2em 0;font-size:.93rem}
+  .blk ol{margin:0;padding-left:1.2em}
+  .pcard .spacer{flex:1}
+  .pcard .btn{margin-top:18px}
+
+  .how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:24px}
+  .how .step{border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  .num{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--gold);color:var(--ink);font-weight:700;margin-bottom:10px}
+  details{border-bottom:1px solid var(--line);padding:14px 0} summary{cursor:pointer;font-weight:600;color:var(--gold-deep)}
+  details p{margin:.6em 0 0;color:var(--muted)}
+  footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-size:.85rem;text-align:center}
+  #copyright{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.35rem;font-weight:700;color:var(--gold);cursor:default;user-select:none;-webkit-user-select:none}
+  footer p{margin:.4em auto;max-width:640px}
+
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(43,38,22,.45);display:flex;align-items:flex-start;justify-content:center;padding:4vh 14px;overflow-y:auto;z-index:50}
+  .modal{background:#fff;border:1.5px solid var(--gold-2);border-radius:var(--radius);width:100%;max-width:560px;padding:24px;box-shadow:0 24px 80px rgba(0,0,0,.25)}
+  .modal.wide{max-width:900px}
+  .mhead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}
+  .mhead h2{margin:0;font-size:1.8rem}
+  .x{border:0;background:var(--gold-soft);color:var(--gold-deep);width:36px;height:36px;border-radius:50%;font-size:1.4rem;line-height:1;cursor:pointer;flex:none}
+  .sec{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}
+  .sec h3{font-size:1.2rem;color:var(--gold-deep);margin-bottom:8px}
+  .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  label.f{display:grid;gap:4px;font-size:.78rem;color:var(--gold-deep);font-weight:600}
+  select,input[type=text],input[type=number],input[type=password],textarea{border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;font:500 .93rem Inter,sans-serif;color:var(--ink);background:#fff;width:100%}
+  select,input{min-width:0} .row label.f{flex:1 1 150px}
+  textarea{min-height:76px;resize:vertical}
+  select:focus,input:focus,textarea:focus{border-color:var(--gold);outline:none}
+  .status{min-height:1.5em;margin-top:10px;font-weight:500} .status.ok{color:var(--ok)} .status.err{color:var(--err)}
+  .addr{font-family:ui-monospace,Menlo,monospace;font-size:.85rem;color:var(--gold-deep)}
+  .key{width:100%;font-family:ui-monospace,Menlo,monospace;font-size:.8rem;word-break:break-all;background:#fff;border:1.5px dashed var(--gold);border-radius:10px;padding:12px;margin:10px 0;min-height:3em}
+  .unlocked{background:var(--gold-soft);border:2px solid var(--gold);border-radius:var(--radius);padding:18px;margin-top:12px}
+  .note{font-size:.85rem;color:var(--muted)}
+  .warn{background:#FFF8E1;border-left:4px solid var(--gold);padding:10px 14px;font-size:.86rem;margin:10px 0}
+  table.adm{width:100%;border-collapse:collapse;font-size:.88rem}
+  table.adm th{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-deep);text-align:left;padding:6px 6px}
+  table.adm td{padding:6px;border-top:1px solid var(--line);vertical-align:middle}
+  table.adm input{padding:6px 8px}
+  .tabs{display:flex;gap:8px;margin:8px 0}
+  .tabsx{overflow-x:auto}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="#top">alimovaura</a>
+    <nav>
+      <a href="#products" data-i18n="navProducts"></a>
+      <a href="#how" data-i18n="navHow"></a>
+      <a href="#faq" data-i18n="navFaq"></a>
+      <div class="lang" role="group" aria-label="Language">
+        <button data-lang="uz" aria-pressed="true">UZ</button>
+        <button data-lang="ru" aria-pressed="false">RU</button>
+        <button data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div class="kicker" data-i18n="kicker"></div>
+      <h1 data-i18n="heroTitle"></h1>
+      <p data-i18n="heroSub"></p>
+      <a class="btn" href="#products" data-i18n="ctaBrowse"></a>
+      &nbsp;
+      <a class="btn ghost" href="#how" data-i18n="ctaHow"></a>
+    </div>
+  </section>
+
+  <section id="products">
+    <div class="wrap">
+      <h2 data-i18n="catalogTitle"></h2>
+      <p style="color:var(--muted);max-width:680px;margin:0" data-i18n="catalogSub"></p>
+      <div class="filters" id="filters" role="group" data-dynamic></div>
+      <div class="grid" id="grid" data-dynamic></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <h2 data-i18n="howTitle"></h2>
+      <div class="how">
+        <div class="step"><div class="num">1</div><h3 data-i18n="h1t"></h3><p data-i18n="h1d"></p></div>
+        <div class="step"><div class="num">2</div><h3 data-i18n="h2t"></h3><p data-i18n="h2d"></p></div>
+        <div class="step"><div class="num">3</div><h3 data-i18n="h3t"></h3><p data-i18n="h3d"></p></div>
+        <div class="step"><div class="num">4</div><h3 data-i18n="h4t"></h3><p data-i18n="h4d"></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <h2 data-i18n="faqTitle"></h2>
+      <details><summary data-i18n="q1"></summary><p data-i18n="a1"></p></details>
+      <details><summary data-i18n="q2"></summary><p data-i18n="a2"></p></details>
+      <details><summary data-i18n="q3"></summary><p data-i18n="a3"></p></details>
+      <details><summary data-i18n="q4"></summary><p data-i18n="a4"></p></details>
+      <details><summary data-i18n="q5"></summary><p data-i18n="a5"></p></details>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span id="copyright">© alimovaura</span>
+    <p data-i18n="footerNote"></p>
+    <p data-i18n="disclaimer"></p>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay" hidden><div class="modal" id="modal" role="dialog" aria-modal="true"></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+<script>
+"use strict";
+
+/* ═══════════════════════════ 1. CONFIG — edit after deploying Marketplace.sol ═══════════════════════════ */
+const ZERO = "0x0000000000000000000000000000000000000000";
+const CONFIG = {
+  walletConnectProjectId: "",   // free Project ID from https://cloud.reown.com — required for the WalletConnect button
+  chains: {
+    137: {
+      id: 137, hex: "0x89", name: "Polygon", rpc: "https://polygon-rpc.com", explorer: "https://polygonscan.com",
+      currency: { name: "POL", symbol: "POL", decimals: 18 },
+      contract: ZERO,   // ← Marketplace address on Polygon
+      tokens: {
+        USDT: { address: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F", decimals: 6 },
+        USDC: { address: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359", decimals: 6 }
+      }
+    },
+    56: {
+      id: 56, hex: "0x38", name: "BNB Chain", rpc: "https://bsc-dataseed.binance.org", explorer: "https://bscscan.com",
+      currency: { name: "BNB", symbol: "BNB", decimals: 18 },
+      contract: ZERO,   // ← Marketplace address on BNB Chain
+      tokens: {
+        USDT: { address: "0x55d398326f99059fF775485246999027B3197955", decimals: 18 },
+        USDC: { address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d", decimals: 18 }
+      }
+    }
+  }
+};
+
+/* ═══════════════════════════ 2. PRODUCT CATALOG — the easy-to-edit data ═══════════════════════════
+   • `id` must equal the productId on the Marketplace contract (addProduct / setProduct).
+   • The price charged is ALWAYS the on-chain price; `price` here is what is shown until it can be read.
+   • `access.url` / `access.key` are revealed after payment. They live in this public file, so anyone can read
+     them in the page source — use a long unguessable URL or a token-gated download service.
+   • The secret Admin Panel (click © alimovaura 3 times) edits this block and exports a new index.html.        */
+const CATALOG = /*CATALOG:START*/{
+  "pinHash": "85bf7e86dc7dff4a67a349fef351657f9837863755ae66969391a67637adce63",
+  "products": [
+    {
+      "id": 1, "category": "mobile", "price": 49, "active": true,
+      "access": { "url": "https://github.com/OWNER/REPO/releases/download/v1.0.0/alimovaura-voice-agent.apk", "key": "", "device": true },
+      "text": {
+        "uz": {
+          "name": "alimovaura Voice Agent",
+          "tagline": "Telefoningizni sizning o‘rningizga boshqaradigan 24/7 ovozli yordamchi",
+          "what": "Ovozingizni tinglaydigan va telefon ekranini odamdek boshqaradigan Android ilova: ilovalarni ochadi, bosadi, yozadi va Telegram’da ovozli xabar yuboradi. Har safar avval sizdan ruxsat so‘raydi.",
+          "problem": "Telefondagi mayda ishlar vaqtingizni oladi: kontaktni topish, chatni ochish, ovozli xabar yozish, kodni nusxalash. Bosishni agent qiladi, siz esa shunchaki gapirasiz.",
+          "how": ["Kirish huquqini sotib oling va ilovani yuklab oling.", "Android sozlamalarida “Maxsus imkoniyatlar” xizmatini yoqing.", "Litsenziya kalitini yarating va ilovaga kiriting.", "Uyg‘otuvchi so‘z va buyruq ayting: “Agent, onamga ovozli xabar yubor”.", "Agent “Hozir bajaraymi?” deb so‘raganda “Ha” deng."]
+        },
+        "ru": {
+          "name": "alimovaura Voice Agent",
+          "tagline": "Голосовой помощник 24/7, который управляет вашим Android-телефоном",
+          "what": "Android-приложение, которое слушает вашу речь и управляет экраном телефона как человек: открывает приложения, нажимает, печатает и отправляет голосовые сообщения в Telegram. Сначала всегда спрашивает разрешение.",
+          "problem": "Мелкие задачи на телефоне отнимают время: найти контакт, открыть чат, записать голосовое, скопировать код. Нажимает агент — вы просто говорите.",
+          "how": ["Купите доступ и скачайте приложение.", "Включите службу специальных возможностей в настройках Android.", "Создайте лицензионный ключ и вставьте его в приложение.", "Скажите слово активации и команду: «Агент, отправь маме голосовое».", "Когда агент спросит «Выполнить сейчас?», ответьте «Да»."]
+        },
+        "en": {
+          "name": "alimovaura Voice Agent",
+          "tagline": "A 24/7 voice assistant that uses your Android phone for you",
+          "what": "An Android app that listens to your voice and operates the phone screen like a person: it opens apps, taps, types and sends Telegram voice messages. It always asks your permission first.",
+          "problem": "Small phone jobs eat your time: finding a contact, opening a chat, recording a voice message, copying a code. The agent does the tapping while you just talk.",
+          "how": ["Buy access and download the app.", "Switch on the Accessibility service in Android settings.", "Create your license key and paste it into the app.", "Say the wake word and a command: “Agent, send a voice message to Mom”.", "Answer “Yes” when the agent asks “Should I execute this now?”."]
+        }
+      }
+    },
+    {
+      "id": 2, "category": "trading", "price": 29, "active": true,
+      "access": { "url": "https://REPLACE-ME.example/journal", "key": "", "device": false },
+      "text": {
+        "uz": {
+          "name": "alimovaura Journal",
+          "tagline": "Soatlik bozor radari bilan aqlli treyding jurnali",
+          "what": "Savdolaringizni yozib boradigan va kapitalingiz qanday o‘sayotganini ko‘rsatadigan treyding jurnali. Shuningdek SMC (Smart Money Concept) asosida 1 soatlik bozor tahlilini beradi — yirik o‘yinchilar qayerda sotib olayotgani yoki sotayotganini ko‘rsatishga harakat qiladi.",
+          "problem": "Ko‘pchilik treyderlar savdolarini yozib bormaydi, shuning uchun bir xil xatolarni takrorlaydi va haqiqatan o‘sayotganini bilmaydi. Jurnal natijalaringizni aniq ko‘rsatadi, 1 soatlik radar esa taxmin qilishdan qutqaradi.",
+          "how": ["Kirish huquqini sotib oling va olingan havola yoki kalitni oching.", "Boshlang‘ich kapitalingizni kiriting.", "Har bir savdodan keyin juftlik, kirish, chiqish va natijani qo‘shing.", "Savdo oldidan 1 soatlik SMC radarini ko‘rib chiqing.", "Har hafta kapital o‘sish grafigini tahlil qiling."]
+        },
+        "ru": {
+          "name": "alimovaura Journal",
+          "tagline": "Умный торговый журнал с часовым рыночным радаром",
+          "what": "Торговый журнал, который записывает ваши сделки и показывает рост капитала. Также даёт часовой анализ рынка по SMC (Smart Money Concept) — где, возможно, покупают или продают крупные игроки.",
+          "problem": "Большинство трейдеров не ведут учёт сделок, поэтому повторяют одни и те же ошибки и не знают, растут ли на самом деле. Журнал наглядно показывает результаты, а часовой радар избавляет от гаданий.",
+          "how": ["Купите доступ и откройте полученную ссылку или ключ.", "Введите стартовый капитал.", "После каждой сделки добавляйте пару, вход, выход и результат.", "Перед сделкой посмотрите часовой SMC-радар.", "Раз в неделю анализируйте график роста капитала."]
+        },
+        "en": {
+          "name": "alimovaura Journal",
+          "tagline": "A smart trading journal with an hourly market radar",
+          "what": "A trading journal that records your trades and shows how your capital grows. It also gives a 1-hour market analysis based on SMC (Smart Money Concept) — where big players may be buying or selling.",
+          "problem": "Most traders don’t track their trades, so they repeat the same mistakes and never know if they are really growing. The journal shows your results clearly, and the 1-hour radar saves you from guessing.",
+          "how": ["Buy access and open the link or key you receive.", "Enter your starting capital.", "After each trade, add the pair, entry, exit and result.", "Check the 1-hour SMC radar before you trade.", "Review the capital growth chart every week."]
+        }
+      }
+    },
+    {
+      "id": 3, "category": "crypto", "price": 79, "active": true,
+      "access": { "url": "https://REPLACE-ME.example/whale-radar", "key": "", "device": false },
+      "text": {
+        "uz": {
+          "name": "Whale & Smart Money Radar",
+          "tagline": "Yirik kripto pul harakatlarini real vaqtda ko‘ring",
+          "what": "Institutlar va “kitlar”ning 1 mln dan 50 mln dollargacha bo‘lgan yirik kripto o‘tkazmalarini shaxsiy va birja hamyonlari o‘rtasida real vaqtda kuzatib boradigan tracker.",
+          "problem": "Yirik o‘yinchilar bozorni harakatga keltirishi mumkin, lekin ularning o‘tkazmalari xom blokcheyn ma’lumotlari ichida yashirin. Radar ularni oddiy jonli lentaga aylantiradi — shunda yirik kirim-chiqimlarni erta payqaysiz.",
+          "how": ["Kirish huquqini sotib oling va panel havolasini oching.", "Jonli lentada yangi yirik o‘tkazmalarni kuzating.", "Yo‘nalishga qarang: hamyondan birjaga o‘tkazma sotuv bosimini, birjadan hamyonga o‘tkazma esa saqlash niyatini bildirishi mumkin.", "Buni boshqa signallar qatorida faqat bitta belgi sifatida ishlating."]
+        },
+        "ru": {
+          "name": "Whale & Smart Money Radar",
+          "tagline": "Смотрите движения крупных денег в крипте в реальном времени",
+          "what": "Трекер, который в реальном времени отслеживает крупные криптопереводы институционалов и «китов» от $1 млн до $50 млн между личными и биржевыми кошельками.",
+          "problem": "Крупные игроки могут двигать рынок, но их переводы спрятаны в сырых данных блокчейна. Радар превращает их в простую живую ленту, чтобы вы раньше замечали крупные ввод и вывод.",
+          "how": ["Купите доступ и откройте ссылку на панель.", "Следите за новыми крупными переводами в живой ленте.", "Смотрите на направление: перевод с кошелька на биржу может означать давление продавцов, а с биржи на кошелёк — намерение держать.", "Используйте это как один из сигналов среди других."]
+        },
+        "en": {
+          "name": "Whale & Smart Money Radar",
+          "tagline": "See big crypto money moves as they happen",
+          "what": "A real-time tracker of large crypto transfers by institutions and whales — from $1M to $50M — between personal wallets and exchange wallets.",
+          "problem": "Big players can move the market, but their transfers are buried in raw blockchain data. The radar turns them into a simple live feed so you notice big deposits and withdrawals early.",
+          "how": ["Buy access and open the dashboard link.", "Watch the live feed for new large transfers.", "Look at the direction: wallet → exchange may mean selling pressure, exchange → wallet may mean holding.", "Use it as one signal among others, never on its own."]
+        }
+      }
+    }
+  ]
+}/*CATALOG:END*/;
+
+/* ═══════════════════════════ 3. TRANSLATIONS (UI) ═══════════════════════════ */
+const I18N = {
+  uz: {
+    navProducts:"Mahsulotlar", navHow:"Qanday ishlaydi", navFaq:"Savollar",
+    kicker:"Raqamli mahsulotlar · Web3",
+    heroTitle:"Telefon, treyding va kripto uchun aqlli raqamli vositalar",
+    heroSub:"Hamyoningizdan USDT yoki USDC bilan bir marta to‘lang. Akkaunt ham, obuna ham kerak emas — kirish huquqingiz blokcheynda saqlanadi.",
+    ctaBrowse:"Mahsulotlarni ko‘rish", ctaHow:"Qanday ishlaydi",
+    catalogTitle:"Mahsulotlar", catalogSub:"Har bir mahsulot oddiy tilda tushuntirilgan: bu nima, qanday muammoni hal qiladi va qanday foydalaniladi.",
+    filterAll:"Hammasi", catMobile:"Mobil", catTrading:"Treyding", catCrypto:"Kripto", catOther:"Boshqa",
+    labelWhat:"Bu nima?", labelProblem:"Qanday muammoni hal qiladi?", labelHow:"Qanday foydalaniladi?",
+    buy:"Sotib olish", owned:"Kirishni ochish", oneTime:"bir martalik to‘lov · USDT / USDC", soon:"Mavjud emas",
+    mClose:"Yopish",
+    mConnectTitle:"1. Hamyonni ulang", mConnectInjected:"MetaMask / brauzer hamyoni", mConnectWC:"WalletConnect", mConnectedAs:"Ulangan:", mDisconnect:"Uzish",
+    mPayTitle:"2. Tarmoq va tokenni tanlang", network:"Tarmoq", payWith:"To‘lov turi", mTotal:"To‘lov summasi", mPay:"To‘lash va ochish",
+    mFees:"Tarmoq komissiyasi uchun ozgina POL yoki BNB ham kerak bo‘ladi.",
+    unlockTitle:"Kirish ochildi", unlockText:"To‘lov blokcheynda tasdiqlandi. Mana sizning kirishingiz:",
+    openLink:"Ochish / yuklab olish", accessKey:"Kirish kaliti", noLink:"Kirish havolasi hali kiritilmagan. Iltimos, sotuvchi bilan bog‘laning.",
+    copy:"Nusxalash", copied:"Nusxalandi",
+    activateTitle:"Telefonni faollashtirish", activateText:"Ilovani oching, birinchi ekrandagi “Qurilma kodi”ni nusxalab bu yerga qo‘ying va hamyoningiz bilan imzolang. Keyin litsenziya kalitini ilovaga kiriting.",
+    deviceLabel:"Qurilma kodi", signBtn:"Litsenziya kalitini yaratish",
+    sideload:"Telefon Play Do‘konidan tashqari o‘rnatish haqida ogohlantirishi mumkin. Brauzeringiz uchun bir marta ruxsat bering. Android 8 yoki undan yangi bo‘lishi kerak.",
+    sNoWallet:"Hamyon topilmadi. Telefonda bu sahifani hamyon ilovasi ichidagi brauzerda oching (MetaMask, Trust Wallet…) yoki WalletConnect’dan foydalaning.",
+    sNoWC:"WalletConnect hali sozlanmagan (CONFIG.walletConnectProjectId bo‘sh).", sNoLib:"Hamyon kutubxonasi yuklanmadi. Internetni tekshirib, sahifani yangilang.",
+    sNotDeployed:"Kontrakt bu tarmoqda hali joylashtirilmagan.", sBalance:"Hamyonda bu token yetarli emas.",
+    sApproving:"1/2-qadam — hamyonda to‘lovga ruxsat bering…", sBuying:"2/2-qadam — hamyonda xaridni tasdiqlang…",
+    sConfirming:"Blokcheyn tasdig‘i kutilmoqda…", sDone:"Tayyor! Kirish ochildi.", sAlready:"Bu hamyonda kirish huquqi allaqachon bor.",
+    sRejected:"So‘rovni bekor qildingiz.", sError:"Xatolik yuz berdi:", sSwitching:"Tarmoq almashtirilmoqda…", sConnectFirst:"Avval hamyonni ulang.",
+    sDeviceBad:"Qurilma kodini ilovadagidek kiriting (XXXX-XXXX-XXXX).", sSigned:"Kalit yaratildi. Uni ilovaga kiriting.", sNoAccess:"Bu hamyonda hali kirish huquqi yo‘q.",
+    howTitle:"Qanday ishlaydi",
+    h1t:"Tanlang", h1d:"Mahsulotni tanlang va u nima qilishini oddiy tilda o‘qing.",
+    h2t:"To‘lang", h2d:"Hamyonni ulang va USDT yoki USDC bilan bir marta to‘lang. Smart-kontrakt pulni to‘g‘ridan-to‘g‘ri sotuvchiga o‘tkazadi.",
+    h3t:"Oching", h3d:"Kirish havolasi yoki kaliti blokcheyn to‘lovni tasdiqlashi bilan darhol paydo bo‘ladi.",
+    h4t:"Foydalaning", h4d:"Mahsulot kartasidagi qisqa qadamlarga amal qiling. Xaridingiz hamyoningizga bog‘langan bo‘ladi.",
+    faqTitle:"Savollar",
+    q1:"Akkaunt kerakmi?", a1:"Yo‘q. Siz kripto hamyoningizdan to‘laysiz. Xarid blokcheynda saqlanadi, shuning uchun o‘sha hamyonni qayta ulasangiz kirish tiklanadi.",
+    q2:"Qaysi tarmoq va tokenlar qo‘llab-quvvatlanadi?", a2:"Polygon yoki BNB Chain, USDT yoki USDC bilan. Tarmoq komissiyasi uchun ozgina POL yoki BNB ham kerak.",
+    q3:"To‘lov qildim, lekin kirishni ko‘rmayapman.", a3:"Mahsulotni oching va to‘lov qilgan hamyoningizni ulang. To‘lov tasdiqlangan bo‘lsa, “Kirishni ochish” tugmasi chiqadi. Bo‘lmasa, bir daqiqa kutib qayta urinib ko‘ring.",
+    q4:"Bu moliyaviy maslahatmi?", a4:"Yo‘q. Journal va Radar — faqat axborot vositalari. Treyding va kripto xavfli; qarorni o‘zingiz qabul qilasiz.",
+    q5:"Voice Agent qaysi telefonlarda ishlaydi?", a5:"Android 8 yoki undan yangi, Google nutq xizmatlari o‘rnatilgan telefonlarda.",
+    footerNote:"To‘lovlar qaytarilmaydi va smart-kontrakt orqali to‘g‘ridan-to‘g‘ri sotuvchi hamyoniga tushadi.",
+    disclaimer:"Moliyaviy maslahat emas. Treyding va kripto xavf bilan bog‘liq.",
+    aTitle:"Sotuvchi paneli", aPinPrompt:"PIN-kodni kiriting", aPinLabel:"PIN", aEnter:"Kirish", aWrong:"PIN noto‘g‘ri.", aLocked:"Juda ko‘p urinish. 30 soniya kuting.", aNoCrypto:"Bu brauzerda PIN tekshiruvi ishlamaydi (HTTPS kerak).",
+    aProducts:"Mahsulotlar", aId:"ID", aName:"Nomi", aPrice:"Narx (USDT)", aUrl:"Kirish / yuklab olish URL", aListed:"Ko‘rinadi", aRemove:"O‘chirish", aConfirmRemove:"Mahsulot ro‘yxatdan o‘chirilsinmi?",
+    aOnchain:"Muhim: xaridordan HAR DOIM kontraktdagi narx olinadi. Narxni o‘zgartirsangiz, kontraktda ham setProduct() chaqiring. Yangi mahsulot uchun addProduct() chaqiring va ID mos bo‘lsin.",
+    aAddTitle:"Yangi mahsulot qo‘shish", aFTitle:"Nomi", aFTagline:"Qisqa tavsif (ixtiyoriy)", aFPrice:"Narx (USDT)", aFWhat:"Bu nima?", aFProblem:"Qanday muammoni hal qiladi?", aFHow:"Qanday foydalaniladi?", aFHowHint:"Har bir qadam — alohida qatorda",
+    aFUrl:"Yuklab olish / kirish URL (https://…)", aFKey:"Kirish kaliti (ixtiyoriy)", aFCategory:"Toifa", aFId:"Kontraktdagi ID",
+    aLangHint:"Kamida bitta tilni to‘liq to‘ldiring; boshqalari bo‘sh qolsa, shu til ko‘rsatiladi.", aAdd:"Mahsulotni qo‘shish", aAdded:"Mahsulot qo‘shildi.", aInvalid:"Maydonlarni tekshiring: ID (takrorlanmas), narx, URL (https://…) va kamida bitta to‘liq til.",
+    aSecurity:"PIN-kodni almashtirish", aNewPin:"Yangi PIN (4–8 raqam)", aChangePin:"PIN-kodni saqlash", aPinChanged:"PIN o‘zgartirildi. Eksport qilishni unutmang.", aPinBad:"PIN 4–8 raqamdan iborat bo‘lishi kerak.",
+    aExportTitle:"Saqlash", aExport:"index.html ni eksport qilish", aExportHint:"Yuklab olingan faylni web-marketplace/index.html o‘rniga qo‘yib, GitHub’ga yuboring. O‘zgarishlar faqat shundan keyin hammaga ko‘rinadi.",
+    aExported:"Fayl yuklab olindi.", aReset:"Mahalliy o‘zgarishlarni bekor qilish", aResetDone:"Nashr etilgan ro‘yxatga qaytildi.", aDirty:"Bu brauzerda nashr etilmagan o‘zgarishlar bor.",
+    aWarnPublic:"Diqqat: PIN faqat qulf. Sahifa kodini hamma o‘qiy oladi, shuning uchun URL/kalitlar ham ochiq. Uzun, taxmin qilib bo‘lmaydigan havolalardan foydalaning.", aClose:"Yopish"
+  },
+  ru: {
+    navProducts:"Продукты", navHow:"Как это работает", navFaq:"Вопросы",
+    kicker:"Цифровые продукты · Web3",
+    heroTitle:"Умные цифровые инструменты для телефона, трейдинга и крипты",
+    heroSub:"Платите один раз из кошелька в USDT или USDC. Без аккаунта и подписки — ваш доступ хранится в блокчейне.",
+    ctaBrowse:"Смотреть продукты", ctaHow:"Как это работает",
+    catalogTitle:"Продукты", catalogSub:"Каждый продукт объяснён простыми словами: что это, какую проблему решает и как им пользоваться.",
+    filterAll:"Все", catMobile:"Мобильные", catTrading:"Трейдинг", catCrypto:"Крипто", catOther:"Другое",
+    labelWhat:"Что это?", labelProblem:"Какую проблему решает?", labelHow:"Как пользоваться?",
+    buy:"Купить", owned:"Открыть доступ", oneTime:"разовый платёж · USDT / USDC", soon:"Недоступно",
+    mClose:"Закрыть",
+    mConnectTitle:"1. Подключите кошелёк", mConnectInjected:"MetaMask / кошелёк в браузере", mConnectWC:"WalletConnect", mConnectedAs:"Подключён:", mDisconnect:"Отключить",
+    mPayTitle:"2. Выберите сеть и монету", network:"Сеть", payWith:"Оплата", mTotal:"К оплате", mPay:"Оплатить и открыть",
+    mFees:"Для комиссии сети нужно немного POL или BNB.",
+    unlockTitle:"Доступ открыт", unlockText:"Платёж подтверждён в блокчейне. Ваш доступ:",
+    openLink:"Открыть / скачать", accessKey:"Ключ доступа", noLink:"Ссылка доступа ещё не указана. Свяжитесь с продавцом.",
+    copy:"Копировать", copied:"Скопировано",
+    activateTitle:"Активация телефона", activateText:"Откройте приложение, скопируйте «Код устройства» с первого экрана, вставьте сюда и подпишите кошельком. Затем вставьте лицензионный ключ в приложение.",
+    deviceLabel:"Код устройства", signBtn:"Создать лицензионный ключ",
+    sideload:"Телефон может предупредить об установке не из Play Маркета. Разрешите один раз для вашего браузера. Нужен Android 8 или новее.",
+    sNoWallet:"Кошелёк не найден. На телефоне откройте страницу в браузере внутри приложения-кошелька (MetaMask, Trust Wallet…) или используйте WalletConnect.",
+    sNoWC:"WalletConnect ещё не настроен (CONFIG.walletConnectProjectId пуст).", sNoLib:"Библиотека кошелька не загрузилась. Проверьте интернет и обновите страницу.",
+    sNotDeployed:"Контракт ещё не развёрнут в этой сети.", sBalance:"Недостаточно средств этого токена на кошельке.",
+    sApproving:"Шаг 1 из 2 — подтвердите разрешение на платёж в кошельке…", sBuying:"Шаг 2 из 2 — подтвердите покупку в кошельке…",
+    sConfirming:"Ждём подтверждения в блокчейне…", sDone:"Готово! Доступ открыт.", sAlready:"У этого кошелька уже есть доступ.",
+    sRejected:"Вы отменили запрос.", sError:"Что-то пошло не так:", sSwitching:"Переключаем сеть…", sConnectFirst:"Сначала подключите кошелёк.",
+    sDeviceBad:"Введите код устройства точно как в приложении (XXXX-XXXX-XXXX).", sSigned:"Ключ создан. Вставьте его в приложение.", sNoAccess:"У этого кошелька пока нет доступа.",
+    howTitle:"Как это работает",
+    h1t:"Выберите", h1d:"Выберите продукт и прочитайте простыми словами, что он делает.",
+    h2t:"Оплатите", h2d:"Подключите кошелёк и заплатите один раз в USDT или USDC. Смарт-контракт отправляет деньги прямо продавцу.",
+    h3t:"Откройте", h3d:"Ссылка или ключ доступа появятся сразу после подтверждения платежа в блокчейне.",
+    h4t:"Пользуйтесь", h4d:"Следуйте коротким шагам на карточке продукта. Покупка привязана к вашему кошельку.",
+    faqTitle:"Вопросы",
+    q1:"Нужен ли аккаунт?", a1:"Нет. Вы платите из крипто-кошелька. Покупка записана в блокчейне, поэтому при повторном подключении того же кошелька доступ восстанавливается.",
+    q2:"Какие сети и монеты поддерживаются?", a2:"Polygon или BNB Chain, оплата в USDT или USDC. Для комиссии сети нужно немного POL или BNB.",
+    q3:"Я заплатил, но не вижу доступ.", a3:"Откройте продукт и подключите кошелёк, которым платили. Если платёж подтверждён, появится кнопка «Открыть доступ». Если нет — подождите минуту и повторите.",
+    q4:"Это финансовая рекомендация?", a4:"Нет. Journal и Radar — лишь информационные инструменты. Трейдинг и крипта рискованны; решения вы принимаете сами.",
+    q5:"На каких телефонах работает Voice Agent?", a5:"На Android 8 и новее, с установленными службами Google для распознавания речи.",
+    footerNote:"Платежи окончательные и поступают напрямую на кошелёк продавца через смарт-контракт.",
+    disclaimer:"Не является финансовой рекомендацией. Трейдинг и крипта связаны с риском.",
+    aTitle:"Панель продавца", aPinPrompt:"Введите PIN-код", aPinLabel:"PIN", aEnter:"Войти", aWrong:"Неверный PIN.", aLocked:"Слишком много попыток. Подождите 30 секунд.", aNoCrypto:"В этом браузере проверка PIN недоступна (нужен HTTPS).",
+    aProducts:"Продукты", aId:"ID", aName:"Название", aPrice:"Цена (USDT)", aUrl:"URL доступа / загрузки", aListed:"Показан", aRemove:"Удалить", aConfirmRemove:"Удалить продукт из списка?",
+    aOnchain:"Важно: с покупателя ВСЕГДА списывается цена из контракта. Меняете цену — вызовите и setProduct() в контракте. Для нового продукта вызовите addProduct(), ID должен совпадать.",
+    aAddTitle:"Добавить продукт", aFTitle:"Название", aFTagline:"Короткий слоган (необязательно)", aFPrice:"Цена (USDT)", aFWhat:"Что это?", aFProblem:"Какую проблему решает?", aFHow:"Как пользоваться?", aFHowHint:"Каждый шаг — с новой строки",
+    aFUrl:"URL загрузки / доступа (https://…)", aFKey:"Ключ доступа (необязательно)", aFCategory:"Категория", aFId:"ID в контракте",
+    aLangHint:"Полностью заполните хотя бы один язык; если остальные пусты, будет показан этот.", aAdd:"Добавить продукт", aAdded:"Продукт добавлен.", aInvalid:"Проверьте поля: ID (уникальный), цена, URL (https://…) и хотя бы один полный язык.",
+    aSecurity:"Смена PIN-кода", aNewPin:"Новый PIN (4–8 цифр)", aChangePin:"Сохранить PIN", aPinChanged:"PIN изменён. Не забудьте экспортировать файл.", aPinBad:"PIN должен состоять из 4–8 цифр.",
+    aExportTitle:"Сохранение", aExport:"Экспортировать index.html", aExportHint:"Замените скачанным файлом web-marketplace/index.html и отправьте в GitHub. Изменения увидят все только после этого.",
+    aExported:"Файл скачан.", aReset:"Сбросить локальные изменения", aResetDone:"Возврат к опубликованному списку.", aDirty:"В этом браузере есть неопубликованные изменения.",
+    aWarnPublic:"Внимание: PIN — лишь замок. Код страницы доступен всем, поэтому URL и ключи тоже видны. Используйте длинные неугадываемые ссылки.", aClose:"Закрыть"
+  },
+  en: {
+    navProducts:"Products", navHow:"How it works", navFaq:"FAQ",
+    kicker:"Digital products · Web3",
+    heroTitle:"Smart digital tools for your phone, trading and crypto",
+    heroSub:"Pay once from your wallet with USDT or USDC. No account, no subscription — your access is saved on the blockchain.",
+    ctaBrowse:"See products", ctaHow:"How it works",
+    catalogTitle:"Products", catalogSub:"Each product is explained in plain words: what it is, what problem it solves and how to use it.",
+    filterAll:"All", catMobile:"Mobile", catTrading:"Trading", catCrypto:"Crypto", catOther:"Other",
+    labelWhat:"What is this?", labelProblem:"What problem does it solve?", labelHow:"How to use it?",
+    buy:"Buy", owned:"Open access", oneTime:"one-time payment · USDT / USDC", soon:"Unavailable",
+    mClose:"Close",
+    mConnectTitle:"1. Connect your wallet", mConnectInjected:"MetaMask / browser wallet", mConnectWC:"WalletConnect", mConnectedAs:"Connected:", mDisconnect:"Disconnect",
+    mPayTitle:"2. Choose network and coin", network:"Network", payWith:"Pay with", mTotal:"You pay", mPay:"Pay and unlock",
+    mFees:"You also need a little POL or BNB for network fees.",
+    unlockTitle:"Access unlocked", unlockText:"Payment confirmed on the blockchain. Here is your access:",
+    openLink:"Open / download", accessKey:"Access key", noLink:"The access link has not been set yet. Please contact the seller.",
+    copy:"Copy", copied:"Copied",
+    activateTitle:"Activate your phone", activateText:"Open the app, copy the Device code from its first screen, paste it here and sign with your wallet. Then paste the license key into the app.",
+    deviceLabel:"Device code", signBtn:"Create license key",
+    sideload:"Your phone may warn about installing apps from outside the Play Store. Allow it once for your browser. Needs Android 8 or newer.",
+    sNoWallet:"No wallet found. On a phone, open this page inside your wallet app’s browser (MetaMask, Trust Wallet…) or use WalletConnect.",
+    sNoWC:"WalletConnect is not configured yet (CONFIG.walletConnectProjectId is empty).", sNoLib:"The wallet library did not load. Check your connection and refresh.",
+    sNotDeployed:"The contract is not deployed on this network yet.", sBalance:"Not enough balance in your wallet for this token.",
+    sApproving:"Step 1 of 2 — approve the payment in your wallet…", sBuying:"Step 2 of 2 — confirm the purchase in your wallet…",
+    sConfirming:"Waiting for blockchain confirmation…", sDone:"Done! Access granted.", sAlready:"This wallet already owns access.",
+    sRejected:"You cancelled the request.", sError:"Something went wrong:", sSwitching:"Switching network…", sConnectFirst:"Connect your wallet first.",
+    sDeviceBad:"Enter the device code exactly as shown in the app (XXXX-XXXX-XXXX).", sSigned:"License key created. Paste it into the app.", sNoAccess:"This wallet has no access yet.",
+    howTitle:"How it works",
+    h1t:"Choose", h1d:"Pick a product and read what it does in plain words.",
+    h2t:"Pay", h2d:"Connect your wallet and pay once in USDT or USDC. The smart contract sends the money straight to the seller.",
+    h3t:"Unlock", h3d:"Your access link or key appears right after the blockchain confirms the payment.",
+    h4t:"Use", h4d:"Follow the short steps on the product card. Your purchase stays linked to your wallet.",
+    faqTitle:"Questions",
+    q1:"Do I need an account?", a1:"No. You pay from your crypto wallet. Your purchase is saved on the blockchain, so connecting the same wallet again restores your access.",
+    q2:"Which networks and coins are supported?", a2:"Polygon or BNB Chain, paid in USDT or USDC. You also need a little POL or BNB for network fees.",
+    q3:"I paid but I don’t see my access.", a3:"Open the product and connect the wallet you paid with. If the payment is confirmed, the “Open access” button appears. If not, wait a minute and try again.",
+    q4:"Is this financial advice?", a4:"No. Journal and Radar are information tools only. Trading and crypto are risky; the decisions are yours.",
+    q5:"Which phones does Voice Agent support?", a5:"Android 8 or newer, with Google speech services installed.",
+    footerNote:"Payments are final and go directly to the seller’s wallet via a smart contract.",
+    disclaimer:"Not financial advice. Trading and crypto involve risk.",
+    aTitle:"Seller panel", aPinPrompt:"Enter your PIN", aPinLabel:"PIN", aEnter:"Enter", aWrong:"Wrong PIN.", aLocked:"Too many attempts. Wait 30 seconds.", aNoCrypto:"PIN check is unavailable in this browser (HTTPS required).",
+    aProducts:"Products", aId:"ID", aName:"Name", aPrice:"Price (USDT)", aUrl:"Access / download URL", aListed:"Listed", aRemove:"Remove", aConfirmRemove:"Remove this product from the list?",
+    aOnchain:"Important: buyers are ALWAYS charged the price stored in the contract. If you change a price here, also call setProduct() on the contract. For a new product call addProduct() and make the ID match.",
+    aAddTitle:"Add a new product", aFTitle:"Title", aFTagline:"Short tagline (optional)", aFPrice:"Price (USDT)", aFWhat:"What is this?", aFProblem:"What problem does it solve?", aFHow:"How to use it?", aFHowHint:"One step per line",
+    aFUrl:"Download / access URL (https://…)", aFKey:"Access key (optional)", aFCategory:"Category", aFId:"On-chain product ID",
+    aLangHint:"Fill at least one language completely; if the others are empty, that one is shown.", aAdd:"Add product", aAdded:"Product added.", aInvalid:"Check the fields: ID (unique), price, URL (https://…) and at least one complete language.",
+    aSecurity:"Change PIN", aNewPin:"New PIN (4–8 digits)", aChangePin:"Save PIN", aPinChanged:"PIN changed. Remember to export the file.", aPinBad:"The PIN must be 4–8 digits.",
+    aExportTitle:"Save permanently", aExport:"Export index.html", aExportHint:"Replace web-marketplace/index.html with the downloaded file and push to GitHub. Everyone sees the changes only after that.",
+    aExported:"File downloaded.", aReset:"Discard local changes", aResetDone:"Back to the published catalog.", aDirty:"This browser has unpublished changes.",
+    aWarnPublic:"Note: the PIN is only a lock. Anyone can read this page’s source, so URLs and keys are visible too. Use long, unguessable links.", aClose:"Close"
+  }
+};
+
+/* ═══════════════════════════ 4. HELPERS & STATE ═══════════════════════════ */
+const DRAFT_KEY = "alimovaura.catalog.draft";
+const LANGS = ["uz", "ru", "en"];
+const CATEGORIES = ["mobile", "trading", "crypto", "other"];
+const CAT_KEY = { mobile: "catMobile", trading: "catTrading", crypto: "catCrypto", other: "catOther" };
+const MARK_RE = /\/\*CATALOG:START\*\/[\s\S]*?\/\*CATALOG:END\*\//;
+
+const MARKET_ABI = [
+  "function quote(uint256 productId, address token) view returns (uint256)",
+  "function hasAccess(address buyer, uint256 productId) view returns (bool)",
+  "function purchase(uint256 productId, address token)",
+  "function products(uint256) view returns (string name, uint256 priceUsd6, bool active)"
+];
+const ERC20_ABI = [
+  "function allowance(address,address) view returns (uint256)",
+  "function approve(address,uint256) returns (bool)",
+  "function balanceOf(address) view returns (uint256)"
+];
+
+const state = {
+  lang: "uz", filter: "all", catalog: null, dirty: false,
+  wallet: null, eip1193: null, account: null, wc: null,
+  owned: {},            // productId -> chainId where access was found
+  onchain: {},          // productId -> {price, active} read from the contract
+  chainId: "137", token: "USDT",
+  status: null, sign: null, device: "",
+  modal: null, lastFocus: null,
+  admin: { ok: false, fails: 0, lockUntil: 0, lang: "uz", common: { id: "", category: "mobile", price: "", url: "", key: "" }, draft: { uz: {}, ru: {}, en: {} }, msg: null }
+};
+
+const $ = (s, r = document) => r.querySelector(s);
+function el(tag, props = {}, ...kids) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) {
+    if (v === false || v == null) continue;
+    if (k === "class") n.className = v;
+    else if (k === "text") n.textContent = v;
+    else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+    else if (v === true) n.setAttribute(k, "");
+    else n.setAttribute(k, v);
+  }
+  kids.flat().forEach((c) => { if (c != null) n.append(c); });
+  return n;
+}
+const t = (k) => (I18N[state.lang] && I18N[state.lang][k]) || I18N.en[k] || k;
+const clone = (o) => JSON.parse(JSON.stringify(o));
+const fmt = (n) => (Number.isInteger(n) ? String(n) : Number(n).toFixed(2));
+const short = (a) => a.slice(0, 6) + "…" + a.slice(-4);
+const safeUrl = (u) => { try { const x = new URL(u); return (x.protocol === "https:" || x.protocol === "http:") ? x.href : null; } catch (e) { return null; } };
+const findProduct = (id) => state.catalog.products.find((p) => p.id === id);
+const priceOf = (p) => (state.onchain[p.id] ? state.onchain[p.id].price : p.price);
+const catLabel = (c) => t(CAT_KEY[c] || "catOther");
+const hasEthers = () => typeof ethers !== "undefined";
+const deployed = (c) => c.contract && c.contract.toLowerCase() !== ZERO;
+const deployedChains = () => Object.values(CONFIG.chains).filter(deployed);
+
+function tp(p) {
+  const o = p.text || {};
+  return o[state.lang] || o.en || o.uz || o.ru || Object.values(o)[0] || { name: "?", tagline: "", what: "", problem: "", how: [] };
+}
+
+const providers = {};
+function readProvider(c) {
+  return providers[c.id] || (providers[c.id] = new ethers.JsonRpcProvider(c.rpc, c.id, { staticNetwork: true }));
+}
+
+function loadCatalog() {
+  try {
+    const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null");
+    if (d && Array.isArray(d.products) && d.pinHash) { state.dirty = true; return d; }
+  } catch (e) { /* ignore */ }
+  return clone(CATALOG);
+}
+function saveDraft() {
+  state.dirty = true;
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(state.catalog)); } catch (e) { /* private mode */ }
+}
+
+async function sha256(s) {
+  if (!window.crypto || !crypto.subtle) throw new Error("no-subtle");
+  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("");
+}
+const pinHash = (pin) => sha256("alimovaura:" + pin);
+
+/* ═══════════════════════════ 5. LANGUAGE ═══════════════════════════ */
+function applyLang(lang) {
+  state.lang = lang;
+  try { localStorage.setItem("lang", lang); } catch (e) { /* ignore */ }
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i18n]").forEach((n) => { n.textContent = t(n.dataset.i18n); });
+  document.querySelectorAll(".lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+  document.title = "alimovaura — " + t("catalogTitle");
+  renderCatalog();
+  if (state.modal) state.modal.render();
+}
+
+/* ═══════════════════════════ 6. CATALOG UI ═══════════════════════════ */
+function renderCatalog() {
+  const visible = state.catalog.products.filter((p) => p.active !== false);
+  const cats = [...new Set(visible.map((p) => p.category || "other"))];
+  if (state.filter !== "all" && !cats.includes(state.filter)) state.filter = "all";
+
+  const chip = (key, label) => el("button", {
+    class: "chip", type: "button", "aria-pressed": String(state.filter === key), text: label,
+    onclick: () => { state.filter = key; renderCatalog(); }
+  });
+  $("#filters").replaceChildren(chip("all", t("filterAll")), ...cats.map((c) => chip(c, catLabel(c))));
+  $("#grid").replaceChildren(...visible.filter((p) => state.filter === "all" || (p.category || "other") === state.filter).map(card));
+}
+
+function block(label, body) {
+  return el("div", { class: "blk" }, el("h4", { text: label }), body);
+}
+
+function card(p) {
+  const x = tp(p);
+  const oc = state.onchain[p.id];
+  const unavailable = oc && oc.active === false;
+  const own = !!state.owned[p.id];
+  return el("article", { class: "pcard" },
+    el("div", { class: "kicker", text: catLabel(p.category || "other") }),
+    el("h3", { text: x.name }),
+    x.tagline ? el("p", { class: "tag", text: x.tagline }) : null,
+    el("div", { class: "price" }, "$" + fmt(priceOf(p)), el("small", { text: t("oneTime") })),
+    block(t("labelWhat"), el("p", { text: x.what })),
+    block(t("labelProblem"), el("p", { text: x.problem })),
+    block(t("labelHow"), el("ol", {}, (x.how || []).map((s) => el("li", { text: s })))),
+    el("div", { class: "spacer" }),
+    el("button", {
+      class: "btn", type: "button", disabled: unavailable && !own,
+      text: own ? t("owned") : unavailable ? t("soon") : t("buy"),
+      onclick: (e) => openBuy(p.id, e.currentTarget)
+    })
+  );
+}
+
+/* ═══════════════════════════ 7. MODAL SHELL ═══════════════════════════ */
+function openModal(kind, render, opener, wide) {
+  state.lastFocus = opener || document.activeElement;
+  state.modal = { kind, render };
+  $("#modal").classList.toggle("wide", !!wide);
+  $("#overlay").hidden = false;
+  document.body.style.overflow = "hidden";
+  render();
+  const first = $("#modal .x");
+  if (first) first.focus();
+}
+function closeModal() {
+  if (state.modal && state.modal.kind === "admin") state.admin.ok = false;
+  state.modal = null;
+  $("#overlay").hidden = true;
+  $("#modal").replaceChildren();
+  document.body.style.overflow = "";
+  state.status = null;
+  if (state.lastFocus && state.lastFocus.focus) { try { state.lastFocus.focus(); } catch (e) { /* ignore */ } }
+}
+function modalHead(title, sub) {
+  return el("div", { class: "mhead" },
+    el("div", {}, sub ? el("div", { class: "kicker", text: sub }) : null, el("h2", { id: "mTitle", text: title })),
+    el("button", { class: "x", type: "button", "aria-label": t("mClose"), text: "×", onclick: closeModal }));
+}
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && state.modal) closeModal(); });
+$("#overlay").addEventListener("mousedown", (e) => { if (e.target.id === "overlay") closeModal(); });
+$("#modal").setAttribute("aria-labelledby", "mTitle");
+
+function setStatus(key, kind, extra) {
+  state.status = key ? { key, kind, extra } : null;
+  paintStatus();
+}
+function paintStatus() {
+  const n = $("#mStatus");
+  if (!n) return;
+  const s = state.status;
+  n.className = "status" + (s && s.kind ? " " + s.kind : "");
+  n.textContent = s ? t(s.key) + (s.extra ? " " + s.extra : "") : "";
+}
+function explain(e) {
+  if (e && (e.code === "ACTION_REJECTED" || e.code === 4001)) return setStatus("sRejected", "err");
+  setStatus("sError", "err", (e && (e.shortMessage || e.reason || e.message)) || String(e));
+}
+
+/* ═══════════════════════════ 8. WALLET ═══════════════════════════ */
+let injectedHooked = false;
+function hookInjected() {
+  if (injectedHooked || !window.ethereum || !window.ethereum.on) return;
+  injectedHooked = true;
+  window.ethereum.on("accountsChanged", (accs) => {
+    if (state.wallet !== "injected") return;
+    state.owned = {};
+    state.account = accs && accs[0] && hasEthers() ? ethers.getAddress(accs[0]) : null;
+    if (!state.account) { state.wallet = null; state.eip1193 = null; }
+    afterWalletChange();
+  });
+}
+
+async function connectInjected() {
+  try {
+    if (!window.ethereum) return setStatus("sNoWallet", "err");
+    if (!hasEthers()) return setStatus("sNoLib", "err");
+    const accs = await window.ethereum.request({ method: "eth_requestAccounts" });
+    state.eip1193 = window.ethereum; state.wallet = "injected";
+    state.account = ethers.getAddress(accs[0]);
+    hookInjected();
+    setStatus(null);
+    afterWalletChange();
+  } catch (e) { explain(e); }
+}
+
+function loadScript(src) {
+  return new Promise((res, rej) => {
+    const s = document.createElement("script");
+    s.src = src; s.onload = res; s.onerror = () => rej(new Error("script load failed"));
+    document.head.append(s);
+  });
+}
+async function connectWC() {
+  try {
+    if (!CONFIG.walletConnectProjectId) return setStatus("sNoWC", "err");
+    if (!hasEthers()) return setStatus("sNoLib", "err");
+    if (!window["@walletconnect/ethereum-provider"]) {
+      await loadScript("https://cdn.jsdelivr.net/npm/@walletconnect/ethereum-provider@2.17.0/dist/index.umd.js");
+    }
+    const { EthereumProvider } = window["@walletconnect/ethereum-provider"];
+    const rpcMap = {}; Object.values(CONFIG.chains).forEach((c) => { rpcMap[c.id] = c.rpc; });
+    const wc = await EthereumProvider.init({
+      projectId: CONFIG.walletConnectProjectId, chains: [137], optionalChains: [56], rpcMap, showQrModal: true,
+      metadata: { name: "alimovaura", description: "alimovaura digital products", url: location.origin, icons: [] }
+    });
+    await wc.connect();
+    state.wc = wc; state.eip1193 = wc; state.wallet = "wc";
+    state.account = ethers.getAddress(wc.accounts[0]);
+    wc.on("disconnect", disconnect);
+    setStatus(null);
+    afterWalletChange();
+  } catch (e) { explain(e); }
+}
+
+async function disconnect() {
+  try { if (state.wc && state.wc.disconnect) await state.wc.disconnect(); } catch (e) { /* ignore */ }
+  state.wc = null; state.eip1193 = null; state.account = null; state.wallet = null; state.owned = {};
+  afterWalletChange();
+}
+
+function afterWalletChange() {
+  renderCatalog();
+  if (state.modal) state.modal.render();
+  checkAccess();
+}
+
+async function ensureChain(c) {
+  const cur = await state.eip1193.request({ method: "eth_chainId" });
+  if (String(cur).toLowerCase() === c.hex) return;
+  setStatus("sSwitching");
+  try {
+    await state.eip1193.request({ method: "wallet_switchEthereumChain", params: [{ chainId: c.hex }] });
+  } catch (e) {
+    const code = e && (e.code || (e.data && e.data.originalError && e.data.originalError.code));
+    if (code !== 4902) throw e;
+    await state.eip1193.request({
+      method: "wallet_addEthereumChain",
+      params: [{ chainId: c.hex, chainName: c.name, nativeCurrency: c.currency, rpcUrls: [c.rpc], blockExplorerUrls: [c.explorer] }]
+    });
+  }
+}
+
+/* ═══════════════════════════ 9. ON-CHAIN READS ═══════════════════════════ */
+async function refreshOnchain() {
+  if (!hasEthers()) return;
+  const chains = deployedChains();
+  if (!chains.length) return;
+  const c = chains[0];
+  const m = new ethers.Contract(c.contract, MARKET_ABI, readProvider(c));
+  await Promise.all(state.catalog.products.map(async (p) => {
+    try {
+      const r = await m.products(p.id);
+      if (r.priceUsd6 > 0n) state.onchain[p.id] = { price: Number(r.priceUsd6) / 1e6, active: r.active };
+    } catch (e) { /* product not on chain yet: keep listed price */ }
+  }));
+  renderCatalog();
+}
+
+async function checkAccess() {
+  if (!state.account || !hasEthers()) return;
+  const acct = state.account;
+  const jobs = [];
+  for (const c of deployedChains()) {
+    for (const p of state.catalog.products) {
+      jobs.push((async () => {
+        try {
+          const m = new ethers.Contract(c.contract, MARKET_ABI, readProvider(c));
+          if (await m.hasAccess(acct, p.id)) state.owned[p.id] = c.id;
+        } catch (e) { /* RPC hiccup */ }
+      })());
+    }
+  }
+  await Promise.all(jobs);
+  if (state.account !== acct) return;
+  renderCatalog();
+  if (state.modal && state.modal.kind === "buy") state.modal.render();
+}
+
+/* ═══════════════════════════ 10. BUY MODAL ═══════════════════════════ */
+function openBuy(pid, opener) {
+  state.status = null;
+  openModal("buy", () => renderBuy(pid), opener, false);
+}
+
+function renderBuy(pid) {
+  const p = findProduct(pid);
+  if (!p) return closeModal();
+  const x = tp(p);
+  const kids = [modalHead(x.name, catLabel(p.category || "other"))];
+  kids.push(state.owned[pid] ? successBox(p) : payBox(p));
+  $("#modal").replaceChildren(...kids);
+  paintStatus();
+}
+
+function payBox(p) {
+  const box = el("div", {});
+  // 1. wallet
+  const s1 = el("div", { class: "sec" }, el("h3", { text: t("mConnectTitle") }));
+  if (!state.account) {
+    s1.append(el("div", { class: "row" },
+      el("button", { class: "btn small", type: "button", text: t("mConnectInjected"), onclick: connectInjected }),
+      el("button", { class: "btn small ghost", type: "button", text: t("mConnectWC"), onclick: connectWC })));
+  } else {
+    s1.append(el("div", { class: "row" },
+      el("span", { text: t("mConnectedAs") }), el("span", { class: "addr", text: short(state.account) }),
+      el("button", { class: "btn small ghost", type: "button", text: t("mDisconnect"), onclick: disconnect })));
+  }
+  box.append(s1);
+
+  // 2. network / token / pay
+  if (state.account) {
+    const chainSel = el("select", { id: "chainSel", onchange: (e) => { state.chainId = e.target.value; } },
+      Object.values(CONFIG.chains).map((c) => el("option", { value: String(c.id), text: c.name, selected: String(c.id) === state.chainId })));
+    const tokenSel = el("select", { id: "tokenSel", onchange: (e) => { state.token = e.target.value; totalEl.textContent = totalText(p); } },
+      ["USDT", "USDC"].map((k) => el("option", { value: k, text: k, selected: k === state.token })));
+    const totalEl = el("strong", { text: totalText(p) });
+    const payBtn = el("button", { class: "btn block", type: "button", text: t("mPay"), style: "margin-top:12px" });
+    payBtn.addEventListener("click", () => buy(p, payBtn));
+    box.append(el("div", { class: "sec" }, el("h3", { text: t("mPayTitle") }),
+      el("div", { class: "row" },
+        el("label", { class: "f" }, el("span", { text: t("network") }), chainSel),
+        el("label", { class: "f" }, el("span", { text: t("payWith") }), tokenSel)),
+      el("p", { style: "margin:12px 0 0" }, t("mTotal") + ": ", totalEl),
+      el("p", { class: "note", style: "margin:4px 0 0", text: t("mFees") }),
+      payBtn));
+  }
+  box.append(el("div", { id: "mStatus", class: "status", role: "status", "aria-live": "polite" }));
+  return box;
+}
+const totalText = (p) => "$" + fmt(priceOf(p)) + " " + state.token;
+
+async function buy(p, btn) {
+  try {
+    if (!state.account) return setStatus("sConnectFirst", "err");
+    if (!hasEthers()) return setStatus("sNoLib", "err");
+    const c = CONFIG.chains[state.chainId];
+    if (!deployed(c)) return setStatus("sNotDeployed", "err");
+    btn.disabled = true;
+
+    await ensureChain(c);
+    const signer = await new ethers.BrowserProvider(state.eip1193).getSigner();
+    const me = await signer.getAddress();
+    const tok = c.tokens[state.token];
+    const market = new ethers.Contract(c.contract, MARKET_ABI, signer);
+    const erc20 = new ethers.Contract(tok.address, ERC20_ABI, signer);
+
+    if (await market.hasAccess(me, p.id)) { state.owned[p.id] = c.id; setStatus("sAlready", "ok"); return afterWalletChange(); }
+
+    const amount = await market.quote(p.id, tok.address);            // price comes from the contract, not from this page
+    if ((await erc20.balanceOf(me)) < amount) return setStatus("sBalance", "err");
+
+    if ((await erc20.allowance(me, c.contract)) < amount) {
+      setStatus("sApproving");
+      await (await erc20.approve(c.contract, amount)).wait();         // exact amount, never unlimited
+    }
+    setStatus("sBuying");
+    const tx = await market.purchase(p.id, tok.address);
+    setStatus("sConfirming");
+    await tx.wait();
+
+    state.owned[p.id] = c.id;                                         // AccessGranted was emitted → reveal access
+    setStatus("sDone", "ok");
+    renderCatalog();
+    if (state.modal) state.modal.render();
+    paintStatus();
+  } catch (e) { explain(e); }
+  finally { btn.disabled = false; }
+}
+
+/* success: reveal link / key, plus device activation for licensed apps */
+function successBox(p) {
+  const acc = p.access || {};
+  const url = acc.url ? safeUrl(acc.url) : null;
+  const box = el("div", { class: "unlocked" }, el("h3", { text: t("unlockTitle") }), el("p", { text: t("unlockText") }));
+
+  if (url) box.append(el("a", { class: "btn", href: url, target: "_blank", rel: "noopener noreferrer", text: t("openLink") }));
+  else if (!acc.key) box.append(el("p", { class: "warn", text: t("noLink") }));
+
+  if (acc.key) {
+    box.append(el("h4", { style: "margin:14px 0 0", text: t("accessKey") }),
+      el("div", { class: "key", text: acc.key }),
+      el("button", { class: "btn ghost small", type: "button", text: t("copy"), onclick: (e) => copyText(acc.key, e.currentTarget) }));
+  }
+
+  if (acc.device) {
+    const dev = el("input", { type: "text", id: "deviceCode", placeholder: "XXXX-XXXX-XXXX", maxlength: "14", autocomplete: "off", spellcheck: "false", value: state.device });
+    dev.addEventListener("input", () => { state.device = dev.value; });
+    const keyBox = el("div", { class: "key", id: "licenseKey", "aria-live": "polite", text: state.licenseKey || "" });
+    const signStatus = el("div", { id: "signStatus", class: "status", role: "status" });
+    const paint = () => {
+      const s = state.sign;
+      signStatus.className = "status" + (s && s.kind ? " " + s.kind : "");
+      signStatus.textContent = s ? t(s.key) : "";
+    };
+    paint();
+    box.append(
+      el("div", { class: "sec" },
+        el("h3", { text: t("activateTitle") }),
+        el("p", { text: t("activateText") }),
+        el("div", { class: "row" },
+          el("label", { class: "f" }, el("span", { text: t("deviceLabel") }), dev),
+          el("button", { class: "btn small", type: "button", text: t("signBtn"), onclick: async () => { await createLicense(p, keyBox); paint(); } })),
+        keyBox,
+        el("button", { class: "btn ghost small", type: "button", text: t("copy"), onclick: (e) => copyText(keyBox.textContent, e.currentTarget) }),
+        signStatus,
+        el("p", { class: "note", text: t("sideload") })));
+  }
+  return box;
+}
+
+async function copyText(text, btn) {
+  if (!text) return;
+  try { await navigator.clipboard.writeText(text); }
+  catch (e) {
+    const ta = el("textarea", { style: "position:fixed;opacity:0" }); ta.value = text; document.body.append(ta); ta.select();
+    try { document.execCommand("copy"); } catch (e2) { /* ignore */ } ta.remove();
+  }
+  if (btn) { const old = btn.textContent; btn.textContent = t("copied"); setTimeout(() => { btn.textContent = old; }, 1400); }
+}
+
+/* Licence key = wallet signature bound to the phone's device code. Format & message must match LicenseManager.kt. */
+function licenseMessage(productId, device, c) {
+  return "VoiceAgent License v1\nProduct: " + productId + "\nDevice: " + device + "\nChain: " + c.id + "\nContract: " + c.contract.toLowerCase();
+}
+async function createLicense(p, keyBox) {
+  const device = (state.device || "").trim().toUpperCase();
+  if (!/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(device)) { state.sign = { key: "sDeviceBad", kind: "err" }; return; }
+  const chainId = state.owned[p.id];
+  if (!chainId || !state.account || !hasEthers()) { state.sign = { key: "sNoAccess", kind: "err" }; return; }
+  try {
+    const c = CONFIG.chains[chainId];
+    const signer = await new ethers.BrowserProvider(state.eip1193).getSigner();
+    const addr = await signer.getAddress();
+    const sig = await signer.signMessage(licenseMessage(p.id, device, c));   // personal_sign (EIP-191)
+    keyBox.textContent = ["VA1", c.id, addr, p.id, sig].join(".");
+    state.licenseKey = keyBox.textContent;
+    state.sign = { key: "sSigned", kind: "ok" };
+  } catch (e) {
+    state.sign = { key: (e && (e.code === "ACTION_REJECTED" || e.code === 4001)) ? "sRejected" : "sError", kind: "err" };
+  }
+}
+
+/* ═══════════════════════════ 11. SECRET ADMIN PANEL ═══════════════════════════ */
+(function secretTrigger() {
+  let n = 0, timer = null;
+  $("#copyright").addEventListener("click", () => {
+    n++; clearTimeout(timer); timer = setTimeout(() => { n = 0; }, 1500);
+    if (n >= 3) { n = 0; openAdmin(); }
+  });
+})();
+
+function openAdmin() {
+  state.admin.msg = null;
+  openModal("admin", renderAdmin, $("#copyright"), true);
+}
+
+function renderAdmin() {
+  const m = $("#modal");
+  m.classList.toggle("wide", state.admin.ok);
+  m.replaceChildren(modalHead(t("aTitle")), state.admin.ok ? adminBody() : adminLogin());
+}
+
+function adminLogin() {
+  const pin = el("input", { type: "password", id: "pin", inputmode: "numeric", autocomplete: "off", "aria-label": t("aPinLabel") });
+  const msg = el("div", { class: "status err", role: "alert" });
+  if (state.admin.msg) msg.textContent = t(state.admin.msg);
+  const go = async () => {
+    const now = Date.now();
+    if (now < state.admin.lockUntil) { state.admin.msg = "aLocked"; return renderAdmin(); }
+    try {
+      if ((await pinHash(pin.value)) === state.catalog.pinHash) { state.admin.ok = true; state.admin.fails = 0; state.admin.msg = null; return renderAdmin(); }
+    } catch (e) { state.admin.msg = "aNoCrypto"; return renderAdmin(); }
+    if (++state.admin.fails >= 5) { state.admin.lockUntil = Date.now() + 30000; state.admin.fails = 0; state.admin.msg = "aLocked"; }
+    else state.admin.msg = "aWrong";
+    renderAdmin();
+  };
+  pin.addEventListener("keydown", (e) => { if (e.key === "Enter") go(); });
+  setTimeout(() => pin.focus(), 0);
+  return el("div", { class: "sec" }, el("p", { text: t("aPinPrompt") }),
+    el("div", { class: "row" }, el("label", { class: "f" }, el("span", { text: t("aPinLabel") }), pin),
+      el("button", { class: "btn small", type: "button", text: t("aEnter"), onclick: go })), msg);
+}
+
+function adminBody() {
+  const A = state.admin;
+  const body = el("div", {});
+  body.append(el("p", { class: "warn", text: t("aWarnPublic") }));
+  if (state.dirty) body.append(el("p", { class: "note", text: "● " + t("aDirty") }));
+
+  /* products table */
+  const rows = state.catalog.products.map((p) => {
+    const price = el("input", { type: "number", min: "0.01", step: "0.01", value: String(p.price), "aria-label": t("aPrice") });
+    price.addEventListener("change", () => { const v = Number(price.value); if (v > 0) { p.price = v; saveDraft(); renderCatalog(); } else price.value = String(p.price); });
+    const url = el("input", { type: "text", value: (p.access && p.access.url) || "", "aria-label": t("aUrl") });
+    url.addEventListener("change", () => { p.access = p.access || {}; p.access.url = url.value.trim(); saveDraft(); });
+    const listed = el("input", { type: "checkbox", checked: p.active !== false, "aria-label": t("aListed") });
+    listed.addEventListener("change", () => { p.active = listed.checked; saveDraft(); renderCatalog(); });
+    return el("tr", {},
+      el("td", { text: String(p.id) }), el("td", { text: tp(p).name }),
+      el("td", { style: "width:110px" }, price), el("td", {}, url), el("td", {}, listed),
+      el("td", {}, el("button", { class: "btn ghost small", type: "button", text: t("aRemove"), onclick: () => {
+        if (!window.confirm(t("aConfirmRemove"))) return;
+        state.catalog.products = state.catalog.products.filter((q) => q !== p); saveDraft(); renderCatalog(); renderAdmin();
+      } })));
+  });
+  body.append(el("div", { class: "sec" }, el("h3", { text: t("aProducts") }),
+    el("div", { style: "overflow-x:auto" }, el("table", { class: "adm" },
+      el("thead", {}, el("tr", {}, ["aId", "aName", "aPrice", "aUrl", "aListed", ""].map((k) => el("th", { text: k ? t(k) : "" })))),
+      el("tbody", {}, rows))),
+    el("p", { class: "note", text: t("aOnchain") })));
+
+  /* add product */
+  const nextId = Math.max(0, ...state.catalog.products.map((p) => p.id)) + 1;
+  if (!A.common.id) A.common.id = String(nextId);
+  const bind = (obj, key, props) => {
+    const inp = props.tag === "textarea" ? el("textarea", {}) : el("input", { type: props.type || "text" });
+    if (props.step) inp.step = props.step; if (props.min) inp.min = props.min;
+    inp.value = obj[key] || "";
+    inp.addEventListener("input", () => { obj[key] = inp.value; });
+    return el("label", { class: "f" }, el("span", { text: props.label }), inp);
+  };
+  const catSel = el("select", { onchange: (e) => { A.common.category = e.target.value; } },
+    CATEGORIES.map((c) => el("option", { value: c, text: catLabel(c), selected: c === A.common.category })));
+  const textBox = el("div", {});
+  const paintText = () => {
+    const d = A.draft[A.lang];
+    textBox.replaceChildren(
+      bind(d, "name", { label: t("aFTitle") }),
+      bind(d, "tagline", { label: t("aFTagline") }),
+      bind(d, "what", { label: t("aFWhat"), tag: "textarea" }),
+      bind(d, "problem", { label: t("aFProblem"), tag: "textarea" }),
+      bind(d, "how", { label: t("aFHow") + " — " + t("aFHowHint"), tag: "textarea" }));
+    textBox.style.display = "grid"; textBox.style.gap = "10px";
+  };
+  const tabs = el("div", { class: "tabs", role: "group" }, LANGS.map((l) => el("button", {
+    class: "chip", type: "button", text: l.toUpperCase(), "aria-pressed": String(A.lang === l),
+    onclick: (e) => { A.lang = l; tabs.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b === e.currentTarget))); paintText(); }
+  })));
+  paintText();
+  const msg = el("div", { class: "status", role: "status" });
+  if (A.msg) { msg.className = "status " + A.msg.kind; msg.textContent = t(A.msg.key); }
+
+  body.append(el("div", { class: "sec" }, el("h3", { text: t("aAddTitle") }),
+    el("div", { class: "row" },
+      bind(A.common, "id", { label: t("aFId"), type: "number", min: "1" }),
+      bind(A.common, "price", { label: t("aFPrice"), type: "number", min: "0.01", step: "0.01" }),
+      el("label", { class: "f" }, el("span", { text: t("aFCategory") }), catSel)),
+    el("div", { class: "row", style: "margin-top:10px" },
+      bind(A.common, "url", { label: t("aFUrl") }), bind(A.common, "key", { label: t("aFKey") })),
+    el("p", { class: "note", text: t("aLangHint") }), tabs, textBox,
+    el("button", { class: "btn small", type: "button", style: "margin-top:12px", text: t("aAdd"), onclick: addProduct }), msg));
+
+  /* PIN */
+  const np = el("input", { type: "password", inputmode: "numeric", autocomplete: "new-password", "aria-label": t("aNewPin") });
+  const pinMsg = el("div", { class: "status", role: "status" });
+  body.append(el("div", { class: "sec" }, el("h3", { text: t("aSecurity") }),
+    el("div", { class: "row" }, el("label", { class: "f" }, el("span", { text: t("aNewPin") }), np),
+      el("button", { class: "btn small ghost", type: "button", text: t("aChangePin"), onclick: async () => {
+        if (!/^\d{4,8}$/.test(np.value)) { pinMsg.className = "status err"; pinMsg.textContent = t("aPinBad"); return; }
+        try { state.catalog.pinHash = await pinHash(np.value); saveDraft(); np.value = ""; pinMsg.className = "status ok"; pinMsg.textContent = t("aPinChanged"); }
+        catch (e) { pinMsg.className = "status err"; pinMsg.textContent = t("aNoCrypto"); }
+      } })), pinMsg));
+
+  /* export */
+  const exMsg = el("div", { class: "status", role: "status" });
+  body.append(el("div", { class: "sec" }, el("h3", { text: t("aExportTitle") }),
+    el("p", { class: "note", text: t("aExportHint") }),
+    el("div", { class: "row" },
+      el("button", { class: "btn small", type: "button", text: t("aExport"), onclick: async () => { await exportHtml(); exMsg.className = "status ok"; exMsg.textContent = t("aExported"); } }),
+      el("button", { class: "btn small ghost", type: "button", text: t("aReset"), onclick: () => {
+        try { localStorage.removeItem(DRAFT_KEY); } catch (e) { /* ignore */ }
+        state.catalog = clone(CATALOG); state.dirty = false; renderCatalog(); renderAdmin();
+      } })), exMsg));
+  return body;
+}
+
+function addProduct() {
+  const A = state.admin;
+  const id = parseInt(A.common.id, 10), price = Number(A.common.price);
+  const url = (A.common.url || "").trim();
+  const text = {};
+  for (const l of LANGS) {
+    const d = A.draft[l];
+    const how = (d.how || "").split("\n").map((s) => s.trim()).filter(Boolean);
+    if ((d.name || "").trim() && (d.what || "").trim() && (d.problem || "").trim() && how.length) {
+      text[l] = { name: d.name.trim(), tagline: (d.tagline || "").trim(), what: d.what.trim(), problem: d.problem.trim(), how };
+    }
+  }
+  const dup = state.catalog.products.some((p) => p.id === id);
+  if (!(id > 0) || dup || !(price > 0) || (url && !safeUrl(url)) || !Object.keys(text).length) {
+    A.msg = { key: "aInvalid", kind: "err" };
+    return renderAdmin();
+  }
+  state.catalog.products.push({
+    id, category: A.common.category, price, active: true,
+    access: { url, key: (A.common.key || "").trim(), device: false }, text
+  });
+  saveDraft();
+  A.common = { id: "", category: A.common.category, price: "", url: "", key: "" };
+  A.draft = { uz: {}, ru: {}, en: {} };
+  A.msg = { key: "aAdded", kind: "ok" };
+  renderCatalog();
+  renderAdmin();
+}
+
+async function exportHtml() {
+  let src = null;
+  try {
+    const r = await fetch(location.href.split("#")[0], { cache: "no-store" });
+    if (r.ok) { const txt = await r.text(); if (MARK_RE.test(txt)) src = txt; }
+  } catch (e) { /* e.g. file:// — fall back to the live DOM */ }
+  if (!src) {
+    const root = document.documentElement.cloneNode(true);
+    root.querySelectorAll("[data-dynamic]").forEach((n) => n.replaceChildren());
+    const ov = root.querySelector("#overlay"); if (ov) ov.setAttribute("hidden", "");
+    const md = root.querySelector("#modal"); if (md) { md.replaceChildren(); md.className = "modal"; }
+    if (root.querySelector("body")) root.querySelector("body").removeAttribute("style");
+    src = "<!DOCTYPE html>\n" + root.outerHTML;
+  }
+  const json = JSON.stringify(state.catalog, null, 2).replace(/</g, "\\u003c");
+  const out = src.replace(MARK_RE, () => "/*CATALOG:" + "START*/" + json + "/*CATALOG:" + "END*/");
+  const a = el("a", { href: URL.createObjectURL(new Blob([out], { type: "text/html" })), download: "index.html" });
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
+/* ═══════════════════════════ 12. INIT ═══════════════════════════ */
+function init() {
+  state.catalog = loadCatalog();
+  let saved = null;
+  try { saved = localStorage.getItem("lang"); } catch (e) { /* ignore */ }
+  document.querySelectorAll(".lang button").forEach((b) => b.addEventListener("click", () => applyLang(b.dataset.lang)));
+  applyLang(saved && I18N[saved] ? saved : "uz");   // Uzbek is the default
+  refreshOnchain();
+}
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
